@@ -1,4 +1,8 @@
 using BackOfficeInventoryApi.Data;
+using BackOfficeInventoryApi.Repository;
+using BackOfficeInventoryApi.Repository.IRepository;
+using BackOfficeInventoryApi.Services;
+using BackOfficeInventoryApi.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +34,9 @@ namespace BackOfficeInventoryApi
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddScoped<IProductRepository, ProductRepository>();
+            builder.Services.AddScoped<IProductServices, ProductServices>();
 
             var app = builder.Build();
 
