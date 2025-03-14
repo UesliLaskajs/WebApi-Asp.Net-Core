@@ -58,3 +58,49 @@ GET {{BackOfficeInventoryApi_HostAddress}}/weatherforecast
 GET {{BackOfficeInventoryApi_HostAddress}}/weatherforecast
 
 ###
+
+POST {{BackOfficeInventoryApi_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "Name":"Fish Romantick",
+  "Description":"Bkye",
+  "Quantity":100
+}
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/products
+
+###
+
+
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/products/2
+
+###
+
+POST {{BackOfficeInventoryApi_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  //Products
+}
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/products
+
+###
+
+PUT {{BackOfficeInventoryApi_HostAddress}}/api/products?id={{id}}
+Content-Type: application/json
+
+{
+      "Id": 1,
+  "Name": "Updated Product Name",
+  "Description": "Updated product description",
+  "Quantity": 50
+}
+
+###

@@ -11,6 +11,6 @@ namespace BackOfficeInventoryApi.Models
 
         public string? Description { get; set; }
 
-        public int? quantity { get; set; } = 0;
+        public int? Quantity { get; set; } = 0;
     }
 }
