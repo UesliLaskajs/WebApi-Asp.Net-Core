@@ -1,0 +1,60 @@
+@BackOfficeInventoryApi_HostAddress = https://localhost:7022
+
+GET {{BackOfficeInventoryApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{BackOfficeInventoryApi_HostAddress}}/api/todoitems
+Content-Type: application/json
+
+
+{
+  "name": "walk dog",
+  "IsComplete": true
+}
+
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/todoitems
+
+###
+
+@id=1
+GET {{BackOfficeInventoryApi_HostAddress}}/api/todoitems/{{id}}
+
+###
+
+
+
+PUT {{BackOfficeInventoryApi_HostAddress}}/api/todoitems/1
+Content-Type: application/json
+
+{
+  "id": 1,
+  "name": "fishes",
+  "IsComplete": true
+}
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/todoitems
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/todoitems
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/todoitems
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/weatherforecast
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/weatherforecast
+
+###
