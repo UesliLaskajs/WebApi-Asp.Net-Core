@@ -30,7 +30,10 @@ namespace BackOfficeInventoryApi
             return builtInFactory(context);
         };
     });
-            builder.Services.AddDbContext<ToDoContext>(opt => opt.UseInMemoryDatabase("ToDoList"));
+            //builder.Services.AddDbContext<ToDoContext>(opt => opt.UseInMemoryDatabase("ToDoList"));
+            builder.Services.AddDbContext<ToDoContext>(options=>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

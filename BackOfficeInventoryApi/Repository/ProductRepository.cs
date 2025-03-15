@@ -1,6 +1,7 @@
 ﻿using BackOfficeInventoryApi.Data;
 using BackOfficeInventoryApi.Models;
 using BackOfficeInventoryApi.Repository.IRepository;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackOfficeInventoryApi.Repository
 {
@@ -14,32 +15,35 @@ namespace BackOfficeInventoryApi.Repository
             _context = context;
         }
 
-        public void AddProduct(Products product)
+        public async Task AddProduct(Products product)
         {
-            _context.Products.Add(product);
+             _context.Products.AddAsync(product);
         }
 
-        public void DeleteProduct(int productId)
+        public async Task DeleteProduct(int productId)
         {
-            var productToBeDeleted = _context.Products.Find(productId);
+            var productToBeDeleted = await _context.Products.FindAsync(productId);
             if (productToBeDeleted != null) { 
                 _context.Products.Remove(productToBeDeleted);
+                await _context.SaveChangesAsync();
             }
+           
         }
 
-        public IEnumerable<Products> GetAllProducts()
+        public async Task<IEnumerable<Products>> GetAllProducts()
         {
-            return _context.Products.ToList();
+            return await _context.Products.ToListAsync();
         }
 
-        public Products GetProductById(int productId)
+        public async Task<Products> GetProductById(int productId)
         {
-            return _context.Products.Find(productId);
+            return await _context.Products.FindAsync(productId);
         }
 
-        public void UpdateProduct(Products product)
+        public async Task UpdateProduct(Products product)
         {
             _context.Products.Update(product);
+            await _context.SaveChangesAsync();
         }
     }
 }

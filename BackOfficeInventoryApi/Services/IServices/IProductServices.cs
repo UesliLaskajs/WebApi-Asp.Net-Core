@@ -4,13 +4,13 @@ namespace BackOfficeInventoryApi.Services.IServices
 {
     public interface IProductServices
     {
-        IEnumerable<Products> GetAllProducts();
-        Products GetProductById(int productId);
+        Task<IEnumerable<Products>> GetAllProducts();
+        Task<Products> GetProductById(int productId);
 
-        void AddProduct(Products product);
+        Task AddProduct(Products product);
 
-        void UpdateProduct(Products product);
+        Task UpdateProduct(Products product);
 
-        void DeleteProduct(int productId);
+        Task DeleteProduct(int productId);
     }
 }

@@ -9,34 +9,34 @@ namespace BackOfficeInventoryApi.Services
     {
         private readonly IProductRepository _productRepository;
 
-        public ProductServices(IProductRepository productRepository)
+        public   ProductServices(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }
 
-        public void AddProduct(Products product)
+        public async Task AddProduct(Products product)
         {
-             _productRepository.AddProduct(product);
+             await _productRepository.AddProduct(product);
         }
 
-        public void DeleteProduct(int productId)
+        public async Task DeleteProduct(int productId)
         {
-             _productRepository.DeleteProduct(productId);
+            await _productRepository.DeleteProduct(productId);
         }
 
-        public IEnumerable<Products> GetAllProducts()
+        public async Task<IEnumerable<Products>> GetAllProducts()
         {
-            return _productRepository.GetAllProducts();
+            return await _productRepository.GetAllProducts();
+        } 
+
+        public async Task< Products> GetProductById(int productId)
+        {
+            return await _productRepository.GetProductById(productId);
         }
 
-        public Products GetProductById(int productId)
+        public async Task UpdateProduct(Products product)
         {
-            return _productRepository.GetProductById(productId);
-        }
-
-        public void UpdateProduct(Products product)
-        {
-            _productRepository.UpdateProduct(product);
+            await _productRepository.UpdateProduct(product);
         }
     }
 }

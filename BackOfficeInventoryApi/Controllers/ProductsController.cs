@@ -1,5 +1,6 @@
 ﻿using BackOfficeInventoryApi.Data;
 using BackOfficeInventoryApi.Models;
+using BackOfficeInventoryApi.Services.IServices;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,39 +12,36 @@ namespace BackOfficeInventoryApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly ToDoContext _context;
+        private readonly IProductServices _productServices;
         
-        public ProductsController(ToDoContext context)
+        public ProductsController(IProductServices productServices)
         {
-            _context = context;
+            _productServices = productServices;
         }
 
 
         [HttpGet]
-        public ActionResult<IEnumerable<Products>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Products>>> GetProducts()
         {
 
-            var allProducts= _context.Products.ToList();
-            return Ok(allProducts);
+            var products = await _productServices.GetAllProducts();
+             return  Ok(products);
 
         }
-
         [HttpGet("{id}")]
-
-        public ActionResult<Products> GetProduct(int id)
+        public async Task<ActionResult<Products>> GetProduct(int id)
         {
-            if(id == null)
+            var product = await _productServices.GetProductById(id);
+            if (product == null)
             {
-                return NotFound();
+                return NotFound("Product not found.");
             }
-
-            return _context.Products.Find(id);
-
+            return Ok(product);
         }
 
         [HttpPost]
 
-        public ActionResult<Products> CreateProduct(Products products)
+        public async Task<ActionResult<Products>> CreateProduct(Products products)
         {
 
             if (products == null || string.IsNullOrEmpty(products.Name))
@@ -51,51 +49,48 @@ namespace BackOfficeInventoryApi.Controllers
                 return BadRequest("Invalid Product Data");
             }
 
-            _context.Products.Add(products);
-            _context.SaveChanges();
+             await _productServices.AddProduct(products);
 
             return CreatedAtAction(nameof(GetProduct), new {id=products.Id},products);
 
         }
 
         [HttpPut]
-        public ActionResult<Products> UpdateProduct(int id,Products updatedProduct)
+        public async Task<ActionResult<Products>> UpdateProduct(int id,Products updatedProduct)
         {
             if (id == 0 || updatedProduct == null || id != updatedProduct.Id)
             {
                 return BadRequest("Invalid Id or Product data.");
             }
 
-            var productToBeUpdated = _context.Products.Find(id);  // Find the product by id
+            var productToBeUpdated = await _productServices.GetProductById(id);  // Find the product by id
 
             if (productToBeUpdated == null)
             {
                 return NotFound("Product not found.");
             }
 
-            productToBeUpdated.Name = updatedProduct.Name;
-            productToBeUpdated.Description = updatedProduct.Description;
-            productToBeUpdated.Quantity = updatedProduct.Quantity;
-
-
-            _context.Products.Update(productToBeUpdated);
-            _context.SaveChanges();
+            await _productServices.UpdateProduct(productToBeUpdated);
 
             return Ok(productToBeUpdated);
         }
 
         [HttpDelete]
 
-        public ActionResult DeleteProduct(int id)
+        public async Task<ActionResult> DeleteProduct(int id)
         {
             if (id == 0)
             {
                 return BadRequest("Id not Found");
             }
 
-            var productToBeDeleted = _context.Products.Find(id);
+            var productToBeDeleted = await _productServices.GetProductById(id);
 
-            _context.Products.Remove(productToBeDeleted);
+            if( productToBeDeleted == null)
+            {
+                return BadRequest("Bad Request");
+            }
+            await _productServices.DeleteProduct(id);
 
             return NoContent();
         }
