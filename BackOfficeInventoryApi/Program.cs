@@ -1,4 +1,5 @@
 using BackOfficeInventoryApi.Data;
+using BackOfficeInventoryApi.GlobalExecptionHandler;
 using BackOfficeInventoryApi.Repository;
 using BackOfficeInventoryApi.Repository.IRepository;
 using BackOfficeInventoryApi.Services;
@@ -42,6 +43,8 @@ namespace BackOfficeInventoryApi
             builder.Services.AddScoped<IProductServices, ProductServices>();
 
             var app = builder.Build();
+
+            app.UseMiddleware<CustomExceptionHandler>();
 
             
 
