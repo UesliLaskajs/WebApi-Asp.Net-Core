@@ -77,6 +77,9 @@ namespace BackOfficeInventoryApi.Controllers
 
         [HttpDelete]
 
+       
+
+
         public async Task<ActionResult> DeleteProduct(int id)
         {
             if (id == 0)

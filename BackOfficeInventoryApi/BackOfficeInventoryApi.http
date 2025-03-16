@@ -104,3 +104,7 @@ Content-Type: application/json
 }
 
 ###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/products/Throw
+
+###
