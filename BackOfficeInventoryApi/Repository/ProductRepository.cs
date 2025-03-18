@@ -17,7 +17,8 @@ namespace BackOfficeInventoryApi.Repository
 
         public async Task AddProduct(Products product)
         {
-             _context.Products.AddAsync(product);
+            await _context.Products.AddAsync(product);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteProduct(int productId)

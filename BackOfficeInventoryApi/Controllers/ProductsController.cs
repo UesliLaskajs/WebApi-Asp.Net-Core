@@ -13,10 +13,12 @@ namespace BackOfficeInventoryApi.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductServices _productServices;
+        private readonly ILogger<ProductsController> _logger;
         
-        public ProductsController(IProductServices productServices)
+        public ProductsController(IProductServices productServices,ILogger<ProductsController> logger)
         {
             _productServices = productServices;
+            _logger = logger;
         }
 
 

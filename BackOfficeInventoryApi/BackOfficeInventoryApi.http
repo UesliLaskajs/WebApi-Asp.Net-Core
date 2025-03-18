@@ -108,3 +108,35 @@ Content-Type: application/json
 GET {{BackOfficeInventoryApi_HostAddress}}/api/products/Throw
 
 ###
+
+POST {{BackOfficeInventoryApi_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "Name":"Fish Romantick",
+  "Description":"Bkye",
+  "Quantity":100
+}
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/products/
+
+
+###
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/products/1
+
+###
+
+POST {{BackOfficeInventoryApi_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "Name":"Fish Romantick",
+  "Description":"Bkye",
+  "Quantity":100
+}
+
+###
+
