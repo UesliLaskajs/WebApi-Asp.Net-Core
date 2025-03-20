@@ -46,6 +46,7 @@ namespace BackOfficeInventoryApi
                 builder.Services.AddDbContext<ToDoContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+                builder.Services.AddAuthentication();
 
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
@@ -57,6 +58,9 @@ namespace BackOfficeInventoryApi
 
                 app.UseMiddleware<CustomExceptionHandler>();
 
+                //app.UseCors();
+                app.UseAuthentication();
+                app.UseAuthorization();
 
 
                 // Configure the HTTP request pipeline.
