@@ -4,10 +4,13 @@ using BackOfficeInventoryApi.Repository;
 using BackOfficeInventoryApi.Repository.IRepository;
 using BackOfficeInventoryApi.Services;
 using BackOfficeInventoryApi.Services.IServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Events;
+using System.Text;
 [assembly: ApiController]
 namespace BackOfficeInventoryApi
 
@@ -46,11 +49,26 @@ namespace BackOfficeInventoryApi
                 builder.Services.AddDbContext<ToDoContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-                builder.Services.AddAuthentication();
+                builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+      .AddJwtBearer(options =>
+      {
+          options.TokenValidationParameters = new TokenValidationParameters
+          {
+              ValidateIssuer = true,
+              ValidIssuer = builder.Configuration["AppSettings:Issuer"],
+              ValidateAudience = true,
+              ValidAudience = builder.Configuration["AppSettings:Audience"],
+              ValidateLifetime = true,
+              IssuerSigningKey = new SymmetricSecurityKey(
+                  Encoding.UTF8.GetBytes(builder.Configuration["AppSettings:SecretKey"]!)),
+              ValidateIssuerSigningKey = true
+          };
+      });
 
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
 
+                builder.Services.AddScoped<IAuthService, AuthService>();
                 builder.Services.AddScoped<IProductRepository, ProductRepository>();
                 builder.Services.AddScoped<IProductServices, ProductServices>();
 

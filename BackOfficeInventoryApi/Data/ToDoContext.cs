@@ -13,5 +13,7 @@ namespace BackOfficeInventoryApi.Data
         public DbSet<ToDoItem> toDoItems { get; set; } = null!;
 
         public DbSet<Products> Products { get; set; } = null!;
+
+        public DbSet<User> Users { get; set; }
     }
 }
