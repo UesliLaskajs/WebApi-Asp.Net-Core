@@ -7,7 +7,7 @@ namespace BackOfficeInventoryApi.Services.IServices
     {
         Task<ActionResult<User?>> RegisterAsync(UserDto request);
         Task<ActionResult> LogInAsync(UserDto request);
-        Task<ActionResult> RefreshTokenAsync(User request);
+        Task<ActionResult<ResponseTokens?>> RefreshTokenAsync(RefreshToken request);
 
     }
 }

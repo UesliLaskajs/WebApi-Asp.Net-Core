@@ -1,6 +1,7 @@
 ﻿using BackOfficeInventoryApi.Models;
 using BackOfficeInventoryApi.Services;
 using BackOfficeInventoryApi.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackOfficeInventoryApi.Controllers
@@ -39,12 +40,32 @@ namespace BackOfficeInventoryApi.Controllers
             return Ok(result);
         }
 
-
-
-
-        public IActionResult Index()
+        [HttpPost("refresh-token")]
+        public async Task<ActionResult<ResponseTokens>> RefreshToken(RefreshToken request)
         {
-            throw new NotImplementedException();
+            var tokens = await _authService.RefreshTokenAsync(request);
+          
+            if (tokens is null || tokens.Value.RefreshTokens is null || tokens.Value.AccessToken is null)
+            {
+                return Unauthorized("Invalid refresh token.");
+            }
+
+            return Ok(tokens);
+        }
+
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult AuthenticatedOnlyEndpoint()
+        {
+            return Ok("You are authenticated!");
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet("admin-only")]
+        public IActionResult AdminOnlyEndpoint()
+        {
+            return Ok("You are and admin!");
         }
     }
 }
