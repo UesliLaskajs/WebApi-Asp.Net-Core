@@ -140,3 +140,7 @@ Content-Type: application/json
 
 ###
 
+
+GET {{BackOfficeInventoryApi_HostAddress}}/api/todoitems
+
+###
