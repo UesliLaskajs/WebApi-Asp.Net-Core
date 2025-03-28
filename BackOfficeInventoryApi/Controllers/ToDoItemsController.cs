@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BackOfficeInventoryApi.Data;
 using BackOfficeInventoryApi.Models;
+using Microsoft.AspNetCore.Cors;
 
 namespace BackOfficeInventoryApi.Controllers
 {
+    [EnableCors("AllowSpecificOrigins")]
     [Route("api/[controller]")]
     [ApiController]
     public class ToDoItemsController : ControllerBase

@@ -6,10 +6,12 @@ using BackOfficeInventoryApi.Services;
 using BackOfficeInventoryApi.Services.IServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using System.Text;
+using System.Threading.RateLimiting;
 
 [assembly: ApiController]
 
@@ -66,13 +68,58 @@ namespace BackOfficeInventoryApi
                 // CORS Configuration
                 builder.Services.AddCors(options =>
                 {
-                    options.AddPolicy("AllowAll", policy =>
+                    options.AddPolicy("AllowSpecificOrigins", policy =>
                     {
-                        policy.AllowAnyOrigin()
-                              .AllowAnyMethod()
-                              .AllowAnyHeader();
+                        policy.WithOrigins("http://localhost:5007")
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
                     });
                 });
+
+                builder.Services.AddRateLimiter(options =>
+                {
+
+                    options.GlobalLimiter = PartitionedRateLimiter.Create<HttpContext, string>(context =>
+                          RateLimitPartition.GetFixedWindowLimiter(
+                                partitionKey: context.Connection.RemoteIpAddress?.ToString(), 
+                                factory: _ => new FixedWindowRateLimiterOptions
+                                {
+                                    PermitLimit = 5,
+                                    Window = TimeSpan.FromSeconds(10),
+                                    QueueLimit = 2
+                                }));
+
+                    options.AddFixedWindowLimiter("FixedPolicy", limiterOptions =>
+                    {
+                        limiterOptions.PermitLimit = 5;
+                        limiterOptions.Window = TimeSpan.FromSeconds(10);
+                        limiterOptions.QueueLimit = 2;
+                    });
+
+                    options.AddTokenBucketLimiter("TokenBucketPolicy", limiterOptions =>
+                    {
+                        limiterOptions.TokenLimit = 10;     // Max tokens
+                        limiterOptions.TokensPerPeriod = 2; // Tokens refilled per period
+                        limiterOptions.ReplenishmentPeriod = TimeSpan.FromSeconds(5);
+                        limiterOptions.QueueLimit = 2;
+                    });
+
+                    options.AddSlidingWindowLimiter("SlidingPolicy", limiterOptions =>
+                    {
+                        limiterOptions.PermitLimit = 5;
+                        limiterOptions.Window = TimeSpan.FromSeconds(30);
+                        limiterOptions.SegmentsPerWindow = 3;
+                        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+                        limiterOptions.QueueLimit = 2;
+                    });
+
+                    options.AddConcurrencyLimiter("ConcurrencyPolicy", limiterOptions =>
+                    {
+                        limiterOptions.PermitLimit = 3; // Max 3 concurrent requests
+                        limiterOptions.QueueLimit = 2;
+                    });
+            });
+
 
                 builder.Services.AddEndpointsApiExplorer();
                 builder.Services.AddSwaggerGen();
@@ -86,7 +133,9 @@ namespace BackOfficeInventoryApi
 
                 // Middleware Order Fix
                 app.UseMiddleware<CustomExceptionHandler>();
-                app.UseCors("AllowAll"); // Apply CORS
+                app.UseCors("AllowSpecificOrigins"); // Apply CORS
+                app.UseRateLimiter();
+
                 app.UseAuthentication();
                 app.UseAuthorization();
 
