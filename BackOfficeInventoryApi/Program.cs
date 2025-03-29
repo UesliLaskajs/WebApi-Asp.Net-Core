@@ -72,7 +72,9 @@ namespace BackOfficeInventoryApi
                     {
                         policy.WithOrigins("http://localhost:5007")
                         .AllowAnyHeader()
-                        .AllowAnyMethod();
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                        
                     });
                 });
 
